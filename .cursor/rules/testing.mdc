@@ -1,0 +1,46 @@
+---
+description: Testing and test structure
+alwaysApply: false
+globs: ["**/src/test/**/*.java", "**/*Test.java"]
+---
+
+# Testing Rules
+
+Default to **JUnit 5 (Jupiter)** (`@Test`, `@BeforeEach`, `@AfterEach` from `org.junit.jupiter.api`) unless the build already standardizes on another framework.
+
+## Test Structure (Arrange-Act-Assert)
+```java
+@Test
+void shouldDoSomethingWhenCondition() {
+    // Arrange: set up state
+    var entry = new BudgetEntry(...);
+    
+    // Act: do the thing
+    double result = entry.amount();
+    
+    // Assert: verify
+    assertEquals(100.0, result);
+}
+```
+
+## Test Isolation
+- @BeforeEach for fresh setup
+- @AfterEach for cleanup
+- No shared state between tests
+- Mock external dependencies (APIs, files)
+
+## Naming
+- `should_<expectation>_when_<condition>`
+- Clear, readable names that document intent
+
+## What to Test
+- Happy path (normal case)
+- Edge cases (empty, null, boundaries)
+- Error cases (exceptions, malformed data)
+- Integration points (file I/O, API calls)
+
+## What NOT to Test
+- Implementation details
+- Getters/setters
+- Auto-generated code
+- Trivial logic that can't break

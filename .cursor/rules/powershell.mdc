@@ -1,0 +1,44 @@
+---
+description: Windows PowerShell specific conventions
+alwaysApply: false
+globs: ["**/*.ps1", "**/*.psm1"]
+---
+
+# Windows PowerShell Rules
+
+## String Handling
+- Use `@"..."@` for multi-line strings
+- Always use `-Encoding UTF8` when writing files
+- Avoid backticks for line continuation (hard to read)
+
+## Environment Variables
+- Temporary (this session): `$env:VAR = "value"`
+- Permanent (user): `[Environment]::SetEnvironmentVariable("VAR", "value", "User")`
+- Permanent (system): `[Environment]::SetEnvironmentVariable("VAR", "value", "Machine")`
+- Always document required env vars
+
+## File Operations
+- Use `-ErrorAction SilentlyContinue` for optional tools
+- Use `Join-Path` for dynamic paths
+- If a script generates or edits Gradle/Java build files, follow **Java** rules for those files (path style, layout)—do not duplicate Gradle conventions here
+- Be explicit: absolute vs. relative paths
+
+## Error Handling
+- Check `$LASTEXITCODE` after Java/Gradle commands
+- Use `-ErrorAction` flags appropriately
+- Fail fast (exit on first error)
+- Document what errors mean
+
+## Example: Calling Gradle
+```powershell
+gradle build
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Build failed"
+    exit 1
+}
+gradle run
+```
+
+## Testing Scripts
+- Test on PowerShell 5.1 (Windows default) AND PowerShell 7 (Core)
+- Document which version minimum

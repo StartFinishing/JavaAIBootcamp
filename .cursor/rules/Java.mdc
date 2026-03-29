@@ -1,0 +1,47 @@
+---
+description: Java language and ecosystem rules
+alwaysApply: false
+globs: ["**/*.java", "**/build.gradle*", "**/settings.gradle*"]
+---
+
+# Java Rules
+
+## Modern Java (21+)
+Use these patterns and explain why they're better:
+
+### Records
+- Immutable data types (no getters/setters boilerplate)
+- Pattern matching
+- Contrast with C structs (memory layout vs. GC)
+
+### Sealed Classes
+- Type hierarchies with known subtypes
+- More type safety than abstract classes
+- When to use vs. records
+
+### Streams vs. Loops
+- Functional transformations (.map, .filter, .reduce)
+- Lazy evaluation benefits
+- When imperative loop is actually better
+- Performance considerations
+
+### Pattern Matching
+- instanceof checks
+- Switch expressions
+- Destructuring (when available)
+
+### Try-with-Resources
+- Auto-close behavior for file/stream handling
+- Exception suppression
+- Compare with C resource management
+
+## Gradle
+- Incremental builds
+- Dependency management
+- Task structure
+- Windows path handling (use `/` not `\`)
+
+## Avoid
+- Over-engineering (SOLID principles yes, but don't force it)
+- Premature optimization
+- Unnecessary abstraction layers

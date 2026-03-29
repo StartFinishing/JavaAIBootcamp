@@ -1,0 +1,84 @@
+---
+description: AI patterns (RAG, Claude API, MCP)
+alwaysApply: false
+globs: ["**/src/**/ai/**/*.java", "**/src/**/rag/**/*.java"]
+---
+
+# AI Patterns Rules
+
+## Claude API
+
+### Structured Outputs
+- Explain why we're forcing JSON (parse safety, cost vs. risk)
+- Show error handling (malformed JSON cases)
+- Discuss token economics (input cost vs. output cost)
+
+### Cost Control
+- Always mention cost implications of API calls
+- Caching strategies (memory vs. freshness vs. speed)
+- Batching to reduce calls
+- Token estimation before calling
+
+### Error Handling
+- Rate limiting (429 errors)
+- Malformed responses
+- Network failures
+- Graceful degradation
+
+## Embeddings & Vector Search
+
+### Concepts
+- What embeddings represent (semantic meaning as vectors)
+- Cosine similarity (why it works)
+- Dimensionality (1536 for Claude, trade-offs)
+- Normalization (why embeddings are unit vectors)
+
+### Scaling
+- In-memory (small datasets, fast)
+- Vector databases (pgvector, Chroma, Pinecone)
+- ANN algorithms (HNSW, IVF)
+- Trade-offs: exact vs. approximate vs. latency
+
+## RAG Architecture
+
+### Three Distinct Steps
+1. **Retrieve**: Find relevant context (vector search, metadata filters)
+2. **Augment**: Format context into prompt
+3. **Generate**: Claude answers using context
+
+### Context Windows
+- How many tokens fit? (Claude: 200K)
+- Cost implications of large context
+- Summarization strategies for old context
+- What gets truncated when over limit?
+
+## MCP Protocol
+
+### Architecture
+- JSON-RPC 2.0 transport
+- Tools, Resources, Prompts (three concept types)
+- Separation: business logic (your Java) vs. protocol (MCP)
+- Multi-server composition
+
+### Transport Options
+- Stdio (same process, production)
+- HTTP (over network, testing)
+- Trade-offs: latency, complexity, deployment
+
+## Function Calling vs. Tools vs. MCP
+- When does Claude decide what to do? (agentic)
+- When do you decide? (direct API calls)
+- MCP when multiple servers/teams
+- Function calling when single codebase
+
+## Caching & Memory
+
+### Short-term
+- Conversation memory (this chat)
+- Token budgeting (don't exceed context window)
+- Summarization triggers
+
+### Long-term
+- Persistent transaction history
+- Embedding cache (same description → same category)
+- Metadata filters to reduce retrieval set
