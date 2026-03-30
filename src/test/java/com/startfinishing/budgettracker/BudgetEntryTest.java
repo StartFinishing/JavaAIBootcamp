@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;    
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BudgetEntryTest {
 
@@ -18,8 +19,8 @@ class BudgetEntryTest {
         assertEquals(4.50, entry.getAmount(), 0.0001);
         assertEquals(TransactionCategory.FOOD, entry.getCategory());
         assertEquals(date, entry.getDate());
+        assertTrue(entry instanceof BudgetTransaction);
     }
-
 
     @Test
     void constructorThrowsExceptionWhenAmountIsNegative() {
@@ -28,10 +29,8 @@ class BudgetEntryTest {
     }
 
     @Test
-    void AmountSetterThrowsExceptionWhenAmountIsNegative() {
+    void constructorThrowsExceptionWhenAmountIsZero() {
         LocalDate date = LocalDate.of(2026, 3, 30);
-        BudgetEntry entry = new BudgetEntry("Coffee", 1.00, TransactionCategory.FOOD, date);
-        assertThrows(BudgetEntryException.class, () -> entry.setAmount(-1.00));
+        assertThrows(BudgetEntryException.class, () -> new BudgetEntry("Coffee", 0.0, TransactionCategory.FOOD, date));
     }
-
 }

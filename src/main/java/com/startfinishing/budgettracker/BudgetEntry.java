@@ -1,102 +1,54 @@
 package com.startfinishing.budgettracker;
 
-import com.startfinishing.budgettracker.BudgetEntryException;
-import com.startfinishing.budgettracker.TransactionCategory;
 import java.time.LocalDate;
 
+/**
+ * Immutable budget entry. To change a logical entry, construct a new {@code BudgetEntry}.
+ */
+public class BudgetEntry implements BudgetTransaction {
 
-
-public class BudgetEntry {
-    private String description;
-    private double amount;
-    private TransactionCategory category;
-    private LocalDate date;
+    private final String description;
+    private final double amount;
+    private final TransactionCategory category;
+    private final LocalDate date;
 
     /**
      * Constructs a BudgetEntry with a description, amount, category, and date.
      *
      * @param description A brief description of the budget entry (e.g., "Bus fare" or "Groceries").
-     * @param amount      The monetary amount of the entry. Positive for income, negative for expenses.
+     * @param amount      The monetary amount of the entry; must be strictly positive.
      * @param category    The classification for the transaction (see TransactionCategory enum).
      * @param date        The date the entry is recorded or applies to.
+     * @throws BudgetEntryException if amount is zero or negative
      */
-    public BudgetEntry(String description, double amount, TransactionCategory category, LocalDate date) 
-    throws BudgetEntryException {
+    public BudgetEntry(String description, double amount, TransactionCategory category, LocalDate date)
+            throws BudgetEntryException {
+        if (amount <= 0) {
+            throw new BudgetEntryException("Amount must be positive");
+        }
         this.description = description;
         this.amount = amount;
         this.category = category;
         this.date = date;
-        if (amount <= 0) 
-            throw new BudgetEntryException("Amount must be positive");
     }
 
-    /**
-     * Returns the description of the budget entry.
-     * @return the description string
-     */
+    @Override
     public String getDescription() {
         return description;
     }
 
-    /**
-     * Sets the description of the budget entry.
-     * @param description the new description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns the amount of the budget entry.
-     * @return the monetary amount
-     */
+    @Override
     public double getAmount() {
         return amount;
     }
 
-    /**
-     * Sets the amount of the budget entry.
-     * Ensures the amount is non-negative. Throws BudgetEntryException if invalid.
-     * 
-     * @param amount the new monetary amount to set
-     * @throws BudgetEntryException if amount is negative
-     */
-    public void setAmount(double amount) throws BudgetEntryException {
-        if (amount < 0) {
-            throw new BudgetEntryException("Amount must be non-negative");
-        }
-        this.amount = amount;
-    }
-
-    /**
-     * Returns the category of the budget entry.
-     * @return the transaction category
-     */
+    @Override
     public TransactionCategory getCategory() {
         return category;
     }
 
-    /**
-     * Sets the category of the budget entry.
-     * @param category the new transaction category to set
-     */
-    public void setCategory(TransactionCategory category) {
-        this.category = category;
-    }
-
-    /**
-     * Returns the date of the budget entry.
-     * @return the date
-     */
+    @Override
     public LocalDate getDate() {
         return date;
     }
-
-    /**
-     * Sets the date of the budget entry.
-     * @param date the new date to set
-     */
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-}   
+}
