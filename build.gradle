@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+// Uses whatever JDK runs Gradle (your machine: Java 25). Add a `java { toolchain { ... } }` block later if you want a fixed version.
+application {
+    mainClass = 'com.startfinishing.HelloWorld'
+}
+
+repositories {
+    mavenCentral()
+}
