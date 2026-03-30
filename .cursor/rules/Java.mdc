@@ -5,6 +5,12 @@ globs: ["**/*.java", "**/build.gradle*", "**/settings.gradle*"]
 ---
 
 # Java Rules
+## Project Convention
+- **Package name**: `com.startfinishing`
+- All Java files go under `src/main/java/com/startfinishing/`
+- Test files go under `src/test/java/com/startfinishing/`
+- When suggesting new classes, always use `package com.startfinishing;`
+
 
 ## Modern Java (21+)
 Use these patterns and explain why they're better:
