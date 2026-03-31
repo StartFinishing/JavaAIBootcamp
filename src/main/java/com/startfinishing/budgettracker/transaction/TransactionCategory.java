@@ -1,4 +1,4 @@
-package com.startfinishing.budgettracker;
+package com.startfinishing.budgettracker.transaction;
 
 public enum TransactionCategory {
     TRANSPORTATION,
