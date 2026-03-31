@@ -20,15 +20,15 @@
             entries = new ArrayList<BudgetEntry>();
             try {
                 entries.add(new BudgetEntry("Bus pass", 25.0, TransactionCategory.TRANSPORTATION, LocalDate.now().minusDays(1)));
-                entries.add(new BudgetEntry("Groceries", 100.0, TransactionCategory.TRANSPORTATION, LocalDate.now()));
-                entries.add(new BudgetEntry("Rent", 1000.0, TransactionCategory.TRANSPORTATION, LocalDate.now()));
-                entries.add(new BudgetEntry("Utilities", 100.0, TransactionCategory.TRANSPORTATION, LocalDate.now()));
-                entries.add(new BudgetEntry("Entertainment", 100.0, TransactionCategory.TRANSPORTATION, LocalDate.now()));
+                entries.add(new BudgetEntry("Groceries", 100.0, TransactionCategory.GROCERIES, LocalDate.now()));
+                entries.add(new BudgetEntry("Rent", 1000.0, TransactionCategory.OTHER, LocalDate.now()));
+                entries.add(new BudgetEntry("Utilities", 100.0, TransactionCategory.UTILITIES, LocalDate.now()));
+                entries.add(new BudgetEntry("Entertainment", 100.0, TransactionCategory.ENTERTAINMENT, LocalDate.now()));
                 entries.add(new BudgetEntry("Other", 100.0, TransactionCategory.OTHER, LocalDate.now()));
                 entries.add(new BudgetEntry("Food", 100.0, TransactionCategory.FOOD, LocalDate.now()));
                 entries.add(new BudgetEntry("More Food", 100.0, TransactionCategory.FOOD, LocalDate.now()));
                 entries.add(new BudgetEntry("More Food", 150.0, TransactionCategory.FOOD, LocalDate.now()));
-                entries.add(new BudgetEntry("More Food", 100.1, TransactionCategory.FOOD, LocalDate.now()));
+                entries.add(new BudgetEntry("Healthcare", 100.1, TransactionCategory.HEALTHCARE, LocalDate.now()));
             } catch (BudgetEntryException e) {
                 // In production: log or otherwise communicate initialization errors.
                 // For this example, print (but won't propagate outside static block).
