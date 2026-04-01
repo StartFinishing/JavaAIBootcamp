@@ -3,13 +3,13 @@ package com.startfinishing.budgettracker;
 import com.startfinishing.budgettracker.transaction.LineItem;
 import com.startfinishing.budgettracker.transaction.Transaction;
 import com.startfinishing.budgettracker.transaction.TransactionCategory;
-import com.startfinishing.budgettracker.transactionstorrage.CSVStorage;
+import com.startfinishing.budgettracker.transactionstorage.CSVStorage;
 import java.time.LocalDate;
 import java.util.List;
 
-public class BudgetingtApp {
+public class BudgetTrackerApp {
 
-  private BudgetingtApp() {}
+  private BudgetTrackerApp() {}
 
   public static void main(String[] args) {
     if (args.length < 2) {

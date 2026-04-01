@@ -1,4 +1,4 @@
-package com.startfinishing.budgettracker.transactionstorrage;
+package com.startfinishing.budgettracker.transactionstorage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

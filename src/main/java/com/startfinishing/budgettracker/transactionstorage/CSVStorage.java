@@ -1,4 +1,4 @@
-package com.startfinishing.budgettracker.transactionstorrage;
+package com.startfinishing.budgettracker.transactionstorage;
 
 import com.startfinishing.budgettracker.transaction.LineItem;
 import com.startfinishing.budgettracker.transaction.Transaction;
