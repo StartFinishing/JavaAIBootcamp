@@ -1,0 +1,14 @@
+#!/bin/sh
+
+echo "Running pre-push checks..."
+./gradlew --quiet check
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+    echo ""
+    echo "pre-push failed."
+    echo "Push blocked because the full Gradle checks did not pass."
+    exit $RESULT
+fi
+
+exit 0

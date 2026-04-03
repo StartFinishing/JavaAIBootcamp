@@ -1,11 +1,18 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.diffplug.spotless' version '6.25.0'
+    id 'checkstyle'
 }
 
-// Uses whatever JDK runs Gradle (your machine: Java 25). Add a `java { toolchain { ... } }` block later if you want a fixed version.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 application {
-    mainClass = 'com.startfinishing.HelloWorld'
+    mainClass = 'com.startfinishing.budgettracker.BudgetTrackerApp'
 }
 
 repositories {
@@ -14,10 +21,28 @@ repositories {
 
 
 dependencies {
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    runtimeOnly 'ch.qos.logback:logback-classic:1.5.18'
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
 }
 
 test {
     useJUnitPlatform()
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        target 'src/*/java/**/*.java'
+    }
+}
+
+checkstyle {
+   toolVersion = '10.17.0'
+}
+
+tasks.named('check') {
+    dependsOn 'spotlessCheck'
 }

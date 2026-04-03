@@ -1,11 +1,12 @@
 package com.startfinishing.budgettracker.transaction;
 
 public enum TransactionCategory {
-    TRANSPORTATION,
-    UTILITIES,
-    ENTERTAINMENT,
-    FOOD,
-    GROCERIES,
-    HEALTHCARE,
-    OTHER
+  TRANSPORTATION,
+  UTILITIES,
+  ENTERTAINMENT,
+  GROCERIES,
+  DINING,
+  CAFE,
+  HEALTHCARE,
+  OTHER
 }

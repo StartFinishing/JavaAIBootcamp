@@ -1,0 +1,14 @@
+#!/bin/sh
+
+echo "Running pre-commit checks..."
+./gradlew --quiet spotlessCheck checkstyleMain test
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+    echo ""
+    echo "pre-commit failed."
+    echo "Fix formatting with ./gradlew spotlessApply and resolve any style or test failures."
+    exit $RESULT
+fi
+
+exit 0
