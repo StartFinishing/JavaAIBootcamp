@@ -4,8 +4,9 @@ public enum TransactionCategory {
   TRANSPORTATION,
   UTILITIES,
   ENTERTAINMENT,
-  FOOD,
   GROCERIES,
+  DINING,
+  CAFE,
   HEALTHCARE,
   OTHER
 }

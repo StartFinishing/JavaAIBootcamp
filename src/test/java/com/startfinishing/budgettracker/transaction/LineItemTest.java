@@ -12,11 +12,11 @@ class LineItemTest {
   @Test
   void constructorStoresFieldsWhenAmountPositive() {
     LocalDate date = LocalDate.of(2026, 3, 30);
-    LineItem entry = new LineItem("Coffee", 4.50, TransactionCategory.FOOD, date);
+    LineItem entry = new LineItem("Coffee", 4.50, TransactionCategory.CAFE, date);
 
     assertEquals("Coffee", entry.getDescription());
     assertEquals(4.50, entry.getAmount(), 0.0001);
-    assertEquals(TransactionCategory.FOOD, entry.getCategory());
+    assertEquals(TransactionCategory.CAFE, entry.getCategory());
     assertEquals(date, entry.getDate());
     assertTrue(entry instanceof Transaction);
   }
@@ -35,7 +35,7 @@ class LineItemTest {
     LocalDate date = LocalDate.of(2026, 3, 30);
     assertThrows(
         IllegalArgumentException.class,
-        () -> new LineItem("Coffee", -4.50, TransactionCategory.FOOD, date));
+        () -> new LineItem("Coffee", -4.50, TransactionCategory.CAFE, date));
   }
 
   @Test
@@ -43,7 +43,7 @@ class LineItemTest {
     LocalDate date = LocalDate.of(2026, 3, 30);
     assertThrows(
         IllegalArgumentException.class,
-        () -> new LineItem("Coffee", 0.0, TransactionCategory.FOOD, date));
+        () -> new LineItem("Coffee", 0.0, TransactionCategory.CAFE, date));
   }
 
   @Test
@@ -51,6 +51,6 @@ class LineItemTest {
     LocalDate date = LocalDate.of(2026, 3, 30);
     assertThrows(
         IllegalArgumentException.class,
-        () -> new LineItem("Frederik123#;", 5.0, TransactionCategory.FOOD, date));
+        () -> new LineItem("Frederik123#;", 5.0, TransactionCategory.CAFE, date));
   }
 }

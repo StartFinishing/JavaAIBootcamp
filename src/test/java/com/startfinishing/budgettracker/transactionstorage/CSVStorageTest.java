@@ -21,7 +21,7 @@ class CSVStorageTest {
     CSVStorage storage = new CSVStorage(csvFile.toString());
     List<Transaction> transactions =
         List.of(
-            new LineItem("Coffee", 4.50, TransactionCategory.FOOD, LocalDate.of(2026, 3, 31)),
+            new LineItem("Coffee", 4.50, TransactionCategory.CAFE, LocalDate.of(2026, 3, 31)),
             new LineItem(
                 "Bus pass", 25.00, TransactionCategory.TRANSPORTATION, LocalDate.of(2026, 3, 30)));
 
@@ -32,7 +32,7 @@ class CSVStorageTest {
     assertEquals(2, loadedTransactions.size());
     assertEquals("Coffee", loadedTransactions.get(0).getDescription());
     assertEquals(4.50, loadedTransactions.get(0).getAmount(), 0.0001);
-    assertEquals(TransactionCategory.FOOD, loadedTransactions.get(0).getCategory());
+    assertEquals(TransactionCategory.CAFE, loadedTransactions.get(0).getCategory());
     assertEquals(LocalDate.of(2026, 3, 31), loadedTransactions.get(0).getDate());
     assertEquals("Bus pass", loadedTransactions.get(1).getDescription());
   }
