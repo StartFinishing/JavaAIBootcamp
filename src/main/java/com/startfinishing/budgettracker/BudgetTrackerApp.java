@@ -24,6 +24,7 @@ public class BudgetTrackerApp {
       printUsage();
       return;
     }
+    logger.debug("Storage type: {}", AppProperties.getProperty("app.storage"));
 
     String filePath = args[0];
     String command = args[1];
