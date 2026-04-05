@@ -1,8 +1,14 @@
 package com.startfinishing.budgettracker.transactionstorage;
 
+import com.startfinishing.budgettracker.transaction.LineItem;
 import com.startfinishing.budgettracker.transaction.Transaction;
+import com.startfinishing.budgettracker.transaction.TransactionCategory;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 class MemoryStorage implements TransactionStore {
 
@@ -35,6 +41,23 @@ class MemoryStorage implements TransactionStore {
       validateTransaction(transaction);
     }
     this.transactions.addAll(incoming);
+  }
+
+  @Override
+  public Transaction addTransaction(
+      String description, String amountString, String category, String dateString)
+      throws IllegalArgumentException, NumberFormatException, DateTimeParseException {
+    double amount = Double.parseDouble(amountString);
+    LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/uu"));
+    TransactionCategory categoryEnum =
+        TransactionCategory.valueOf(category.toUpperCase(Locale.ROOT));
+    if (categoryEnum == null) {
+      throw new IllegalArgumentException("Invalid category: " + category);
+    }
+    Transaction transaction = new LineItem(description, amount, categoryEnum, date);
+    validateTransaction(transaction);
+    addTransaction(transaction);
+    return transaction;
   }
 
   private static void validateTransaction(Transaction transaction) {
