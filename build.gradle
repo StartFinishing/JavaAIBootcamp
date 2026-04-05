@@ -54,6 +54,15 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    systemProperty 'APP_ENV', 'test'
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        showStandardStreams = true
+        exceptionFormat 'full'
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
 }
 
 spotless {

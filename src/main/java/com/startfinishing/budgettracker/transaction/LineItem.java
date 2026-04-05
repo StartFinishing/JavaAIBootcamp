@@ -17,13 +17,10 @@ public class LineItem implements Transaction {
    * @param amount The monetary amount of the entry; must be strictly positive.
    * @param category The classification for the transaction (see TransactionCategory enum).
    * @param date The date the entry is recorded or applies to.
-   * @throws IllegalArgumentException if amount is zero or negative
+   *     <p>Does not validate the description, amount, category, or date. This is done in the
+   *     validateTransaction method of the MemoryStorage class if required.
    */
   public LineItem(String description, double amount, TransactionCategory category, LocalDate date) {
-    validateDescription(description);
-    if (amount <= 0) {
-      throw new IllegalArgumentException("Amount must be positive");
-    }
     this.description = description;
     this.amount = amount;
     this.category = category;
@@ -48,18 +45,5 @@ public class LineItem implements Transaction {
   @Override
   public LocalDate getDate() {
     return date;
-  }
-
-  private static void validateDescription(String description) {
-    if (description == null || description.isBlank()) {
-      throw new IllegalArgumentException("Description must not be blank");
-    }
-
-    for (char ch : description.toCharArray()) {
-      if (!(Character.isLetterOrDigit(ch) || ch == ' ')) {
-        throw new IllegalArgumentException(
-            "Description must contain only letters, digits, and spaces");
-      }
-    }
   }
 }

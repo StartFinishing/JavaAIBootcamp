@@ -1,7 +1,6 @@
 package com.startfinishing.budgettracker.transaction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -28,29 +27,5 @@ class LineItemTest {
         new LineItem("Frederik123 Transport", 40.00, TransactionCategory.TRANSPORTATION, date);
 
     assertEquals("Frederik123 Transport", entry.getDescription());
-  }
-
-  @Test
-  void constructorThrowsExceptionWhenAmountIsNegative() {
-    LocalDate date = LocalDate.of(2026, 3, 30);
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> new LineItem("Coffee", -4.50, TransactionCategory.CAFE, date));
-  }
-
-  @Test
-  void constructorThrowsExceptionWhenAmountIsZero() {
-    LocalDate date = LocalDate.of(2026, 3, 30);
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> new LineItem("Coffee", 0.0, TransactionCategory.CAFE, date));
-  }
-
-  @Test
-  void constructorThrowsExceptionWhenDescriptionContainsSymbols() {
-    LocalDate date = LocalDate.of(2026, 3, 30);
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> new LineItem("Frederik123#;", 5.0, TransactionCategory.CAFE, date));
   }
 }

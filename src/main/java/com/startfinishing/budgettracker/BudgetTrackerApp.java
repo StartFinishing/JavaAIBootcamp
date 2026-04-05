@@ -1,15 +1,10 @@
 package com.startfinishing.budgettracker;
 
-import com.startfinishing.budgettracker.transaction.LineItem;
 import com.startfinishing.budgettracker.transaction.Transaction;
-import com.startfinishing.budgettracker.transaction.TransactionCategory;
 import com.startfinishing.budgettracker.transactionstorage.TransactionStorageFactory;
 import com.startfinishing.budgettracker.transactionstorage.TransactionStore;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,21 +71,9 @@ public class BudgetTrackerApp {
       return;
     }
     try {
-      String description = args[1];
-      double amount = Double.parseDouble(args[2]);
-      TransactionCategory category =
-          TransactionCategory.valueOf(args[3].trim().toUpperCase(Locale.ROOT));
-      LocalDate date = LocalDate.parse(args[4], DateTimeFormatter.ofPattern("dd/MM/uu"));
-      Transaction transaction = new LineItem(description, amount, category, date);
-      storage.addTransaction(transaction);
+      Transaction transaction = storage.addTransaction(args[1], args[2], args[3], args[4]);
       logger.info("Transaction added: {}", transaction);
-    } catch (NumberFormatException e) {
-      logger.error("Error adding transaction: {}", e.getMessage());
-      printUsage();
     } catch (IllegalArgumentException e) {
-      logger.error("Error adding transaction: {}", e.getMessage());
-      printUsage();
-    } catch (Exception e) {
       logger.error("Error adding transaction: {}", e.getMessage());
       printUsage();
     }

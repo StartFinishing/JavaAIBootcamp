@@ -1,6 +1,7 @@
 package com.startfinishing.budgettracker.transactionstorage;
 
 import com.startfinishing.budgettracker.transaction.Transaction;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -17,6 +18,20 @@ public interface TransactionStore {
    * @param transaction The transaction to add. Must not be null.
    */
   public void addTransaction(Transaction transaction);
+
+  /**
+   * Adds a single transaction to the store using raw parameters.
+   *
+   * @param transaction The transaction to add. Must not be null.
+   * @throws IllegalArgumentException if the transaction is null or the amount is not a valid
+   *     double.
+   * @throws NumberFormatException if the amount is not a valid double.
+   * @throws IllegalArgumentException if the category is not a valid TransactionCategory.
+   * @throws DateTimeParseException if the date is not a valid LocalDate.
+   */
+  public Transaction addTransaction(
+      String description, String amountString, String category, String dateString)
+      throws IllegalArgumentException, NumberFormatException, DateTimeParseException;
 
   /**
    * Adds multiple transactions to the store.
