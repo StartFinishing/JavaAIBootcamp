@@ -12,6 +12,15 @@ import java.util.Locale;
 
 class MemoryStorage implements TransactionStore {
 
+  /**
+   * European day/month/year: variable-width day and month, then 4-digit or 2-digit year ({@code uu}
+   * uses pivot around 2000).
+   */
+  private static final List<DateTimeFormatter> FLEXIBLE_DATE_FORMATTERS =
+      List.of(
+          DateTimeFormatter.ofPattern("d/M/uuuu", Locale.ROOT),
+          DateTimeFormatter.ofPattern("d/M/uu", Locale.ROOT));
+
   private final List<Transaction> transactions = new ArrayList<>();
   private static final MemoryStorage instance = new MemoryStorage();
 
@@ -48,7 +57,7 @@ class MemoryStorage implements TransactionStore {
       String description, String amountString, String category, String dateString)
       throws IllegalArgumentException, NumberFormatException, DateTimeParseException {
     double amount = Double.parseDouble(amountString);
-    LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/uu"));
+    LocalDate date = parseFlexibleDate(dateString);
     TransactionCategory categoryEnum =
         TransactionCategory.valueOf(category.toUpperCase(Locale.ROOT));
     if (categoryEnum == null) {
@@ -58,6 +67,22 @@ class MemoryStorage implements TransactionStore {
     validateTransaction(transaction);
     addTransaction(transaction);
     return transaction;
+  }
+
+  private static LocalDate parseFlexibleDate(String dateString) {
+    String text = dateString.trim();
+    DateTimeParseException last = null;
+    for (DateTimeFormatter formatter : FLEXIBLE_DATE_FORMATTERS) {
+      try {
+        return LocalDate.parse(text, formatter);
+      } catch (DateTimeParseException e) {
+        last = e;
+      }
+    }
+    if (last != null) {
+      throw last;
+    }
+    throw new DateTimeParseException("Empty date text", text, 0);
   }
 
   private static void validateTransaction(Transaction transaction) {

@@ -1,5 +1,7 @@
 package com.startfinishing.budgettracker.transactionstorage;
 
+import com.startfinishing.budgettracker.AppProperties;
+
 /** Creates {@link TransactionStore} implementations. No instances — use static methods only. */
 public final class TransactionStorageFactory {
 
@@ -12,11 +14,10 @@ public final class TransactionStorageFactory {
   }
 
   /**
-   * Placeholder until {@link CSVStorage} implements {@link TransactionStore} and a fixed URI /
-   * config is wired (JAV-19 / JAV-21).
+   * New {@link CSVStorage} each call, using {@code app.storage.csv.path} from {@link
+   * AppProperties}.
    */
   public static TransactionStore getCSVStorage() {
-    throw new UnsupportedOperationException(
-        "CSVStorage does not implement TransactionStore yet; wire after CSV rewrite.");
+    return new CSVStorage(AppProperties.getProperty("app.storage.csv.path"));
   }
 }

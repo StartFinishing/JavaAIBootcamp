@@ -1,7 +1,8 @@
 package com.startfinishing.budgettracker.transactionstorage;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,12 @@ class TransactionStorageFactoryTest {
   }
 
   @Test
-  void getCSVStorageThrowsUnsupportedOperationException() {
-    assertThrows(UnsupportedOperationException.class, TransactionStorageFactory::getCSVStorage);
+  void getCSVStorageReturnsNewCsvStorageEachCall() {
+    TransactionStore first = TransactionStorageFactory.getCSVStorage();
+    TransactionStore second = TransactionStorageFactory.getCSVStorage();
+
+    assertInstanceOf(CSVStorage.class, first);
+    assertInstanceOf(CSVStorage.class, second);
+    assertNotSame(first, second);
   }
 }
