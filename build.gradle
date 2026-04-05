@@ -15,6 +15,31 @@ application {
     mainClass = 'com.startfinishing.budgettracker.BudgetTrackerApp'
 }
 
+// Forward -DAPP_ENV from the Gradle JVM to the app JVM (e.g. gradlew run '-DAPP_ENV=prod').
+tasks.named('run', JavaExec) {
+    def appEnv = System.getProperty('APP_ENV')
+    if (appEnv != null) {
+        systemProperty 'APP_ENV', appEnv
+    }
+}
+
+// Convenience tasks: set APP_ENV on the application JVM (same classpath/main as `run`).
+// Use --args the same way as `run`, e.g. gradlew run-dev --args="summarise"
+def registerRunWithAppEnv = { String taskName, String appEnvValue ->
+    tasks.register(taskName, JavaExec) {
+        group = 'application'
+        description = "Runs BudgetTrackerApp with APP_ENV=${appEnvValue}"
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = application.mainClass
+        systemProperty 'APP_ENV', appEnvValue
+        standardInput = System.in
+    }
+}
+
+registerRunWithAppEnv('run-dev', 'dev')
+registerRunWithAppEnv('run-prod', 'prod')
+registerRunWithAppEnv('run-test', 'test')
+
 repositories {
     mavenCentral()
 }
@@ -23,7 +48,6 @@ repositories {
 dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.16'
     runtimeOnly 'ch.qos.logback:logback-classic:1.5.18'
-
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
 }

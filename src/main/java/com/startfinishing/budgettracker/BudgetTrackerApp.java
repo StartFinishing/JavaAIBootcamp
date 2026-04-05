@@ -3,10 +3,13 @@ package com.startfinishing.budgettracker;
 import com.startfinishing.budgettracker.transaction.LineItem;
 import com.startfinishing.budgettracker.transaction.Transaction;
 import com.startfinishing.budgettracker.transaction.TransactionCategory;
-import com.startfinishing.budgettracker.transactionstorage.CSVStorage;
+import com.startfinishing.budgettracker.transactionstorage.TransactionStorageFactory;
+import com.startfinishing.budgettracker.transactionstorage.TransactionStore;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,84 +17,89 @@ public class BudgetTrackerApp {
 
   private static final Logger logger = LoggerFactory.getLogger(BudgetTrackerApp.class);
 
-  private BudgetTrackerApp() {}
-
   public static void main(String[] args) {
+    BudgetTrackerApp app;
     logger.debug("Application started with arguments: {}", Arrays.toString(args));
 
-    if (args.length < 2) {
-      logger.warn("Expected at least 2 arguments but received {}", args.length);
+    if (args.length < 1) {
+      logger.warn("Expected at least 1 argument but received {}", args.length);
       printUsage();
       return;
     }
+    logger.debug("Storage type: {}", AppProperties.getProperty("app.storage"));
+    logger.debug("Command: {}", args[0]);
 
-    String filePath = args[0];
-    String command = args[1];
-    logger.debug("Parsed filePath='{}', command='{}'", filePath, command);
-    CSVStorage storage = new CSVStorage(filePath);
-
+    String command = args[0];
+    app = new BudgetTrackerApp();
     switch (command) {
       case "addTransaction":
-        addTransaction(args, storage);
+        app.addTransaction(args);
         break;
       case "summarise":
-        summarise(storage);
+        app.summarise();
         break;
       default:
-        logger.warn("Unknown command '{}' for file '{}'", command, filePath);
-        System.out.println("Unknown command: " + command);
+        logger.warn("Unknown command '{}'", command);
         printUsage();
-    }
-  }
-
-  private static void addTransaction(String[] args, CSVStorage storage) {
-    if (args.length != 5) {
-      logger.warn("Invalid addTransaction arguments: {}", Arrays.toString(args));
-      System.out.println("Usage: <filePath> addTransaction <description> <amount> <category>");
-      return;
-    }
-
-    String description = args[2];
-    double amount = Double.parseDouble(args[3]);
-    TransactionCategory category = TransactionCategory.valueOf(args[4].toUpperCase());
-    logger.debug(
-        "Adding transaction description='{}', amount={}, category={}, file='{}'",
-        description,
-        amount,
-        category,
-        storage.getFilePath());
-
-    List<Transaction> transactions = storage.readTransactions();
-    transactions.add(new LineItem(description, amount, category, LocalDate.now()));
-    storage.writeTransactions(transactions);
-
-    logger.info("Added transaction '{}' to '{}'", description, storage.getFilePath());
-    System.out.println("Added transaction: " + description);
-  }
-
-  private static void summarise(CSVStorage storage) {
-    List<Transaction> transactions = storage.readTransactions();
-    double total = transactions.stream().mapToDouble(Transaction::getAmount).sum();
-    logger.info(
-        "Summarising {} transactions from '{}'", transactions.size(), storage.getFilePath());
-
-    System.out.println("Transactions: " + transactions.size());
-    System.out.println("Total: " + total);
-
-    for (TransactionCategory category : TransactionCategory.values()) {
-      double categoryTotal =
-          transactions.stream()
-              .filter(transaction -> transaction.getCategory() == category)
-              .mapToDouble(Transaction::getAmount)
-              .sum();
-      System.out.println(category + ": " + categoryTotal);
+        break;
     }
   }
 
   private static void printUsage() {
-    logger.debug("Printing usage instructions");
-    System.out.println("Usage:");
-    System.out.println("  <filePath> addTransaction <description> <amount> <category>");
-    System.out.println("  <filePath> summarise");
+    logger.info("Usage:");
+    logger.info(
+        "   addTransaction <description> <amount> <category> <date dd/MM/yy>"
+            + " (category: enum name, case-insensitive)");
+    logger.info("   summarise");
+  }
+
+  private final TransactionStore storage;
+
+  private BudgetTrackerApp() {
+    switch (AppProperties.getProperty("app.storage")) {
+      case "csv":
+        storage = TransactionStorageFactory.getCSVStorage();
+        break;
+      case "memory":
+        storage = TransactionStorageFactory.getMemoryStorage();
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "Invalid storage type: " + AppProperties.getProperty("app.storage"));
+    }
+  }
+
+  private void addTransaction(String[] args) {
+    if (args.length < 5) {
+      logger.warn("Expected at least 5 arguments but received {}", args.length);
+      printUsage();
+      return;
+    }
+    try {
+      String description = args[1];
+      double amount = Double.parseDouble(args[2]);
+      TransactionCategory category =
+          TransactionCategory.valueOf(args[3].trim().toUpperCase(Locale.ROOT));
+      LocalDate date = LocalDate.parse(args[4], DateTimeFormatter.ofPattern("dd/MM/uu"));
+      Transaction transaction = new LineItem(description, amount, category, date);
+      storage.addTransaction(transaction);
+      logger.info("Transaction added: {}", transaction);
+    } catch (NumberFormatException e) {
+      logger.error("Error adding transaction: {}", e.getMessage());
+      printUsage();
+    } catch (IllegalArgumentException e) {
+      logger.error("Error adding transaction: {}", e.getMessage());
+      printUsage();
+    } catch (Exception e) {
+      logger.error("Error adding transaction: {}", e.getMessage());
+      printUsage();
+    }
+  }
+
+  private void summarise() {
+    List<Transaction> transactions = storage.getTransactions();
+    for (Transaction transaction : transactions) {
+      System.out.println(transaction);
+    }
   }
 }
