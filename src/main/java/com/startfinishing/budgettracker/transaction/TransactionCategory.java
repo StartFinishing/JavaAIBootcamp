@@ -7,6 +7,6 @@ public enum TransactionCategory {
   GROCERIES,
   DINING,
   CAFE,
-  HEALTHCARE,
+  HEALTH,
   OTHER
 }

@@ -1,10 +1,13 @@
 package com.startfinishing.budgettracker;
 
 import com.startfinishing.budgettracker.transaction.Transaction;
+import com.startfinishing.budgettracker.transaction.TransactionCategory;
 import com.startfinishing.budgettracker.transactionstorage.TransactionStorageFactory;
 import com.startfinishing.budgettracker.transactionstorage.TransactionStore;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +46,8 @@ public class BudgetTrackerApp {
   private static void printUsage() {
     logger.info("Usage:");
     logger.info(
-        "   addTransaction <description> <amount> <category> <date dd/MM/yy>"
-            + " (category: enum name, case-insensitive)");
+        "   addTransaction <description> <amount> <category> <date d/M/yyyy or d/M/yy>"
+            + " (day/month, e.g. 12/5/2026, 15/05/2026, 12/5/26; category: enum name, case-insensitive)");
     logger.info("   summarise");
   }
 
@@ -81,8 +84,23 @@ public class BudgetTrackerApp {
 
   private void summarise() {
     List<Transaction> transactions = storage.getTransactions();
-    for (Transaction transaction : transactions) {
-      System.out.println(transaction);
-    }
+    double total = transactions.stream().mapToDouble(Transaction::getAmount).sum();
+    transactions.forEach(System.out::println);
+    logger.info("Total: {}", total);
+    logger.info("Average: {}", transactions.isEmpty() ? 0 : total / transactions.size());
+    logger.info(
+        "Min: {}", transactions.stream().mapToDouble(Transaction::getAmount).min().orElse(0));
+    logger.info(
+        "Max: {}", transactions.stream().mapToDouble(Transaction::getAmount).max().orElse(0));
+    logger.info("Count: {}", transactions.size());
+
+    Map<TransactionCategory, Double> categoryTotals =
+        transactions.stream()
+            .collect(
+                Collectors.groupingBy(
+                    Transaction::getCategory, Collectors.summingDouble(Transaction::getAmount)));
+    categoryTotals.entrySet().stream()
+        .sorted(Map.Entry.comparingByKey())
+        .forEach(e -> logger.info("Category {} total: {}", e.getKey(), e.getValue()));
   }
 }

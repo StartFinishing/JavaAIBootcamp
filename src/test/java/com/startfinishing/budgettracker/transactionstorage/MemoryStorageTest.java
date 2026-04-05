@@ -42,6 +42,18 @@ public class MemoryStorageTest {
   }
 
   @Test
+  void addTransactionStringAcceptsFlexibleEuropeanDateFormats() {
+    TransactionStore storage = new MemoryStorage();
+
+    storage.addTransaction("A", "1.0", "OTHER", "12/5/2026");
+    storage.addTransaction("B", "1.0", "OTHER", "12/05/2025");
+    storage.addTransaction("C", "1.0", "OTHER", "12/5/26");
+    storage.addTransaction("D", "1.0", "OTHER", "15/05/2026");
+
+    assertEquals(4, storage.getTransactions().size());
+  }
+
+  @Test
   void addTransactionWithLineItemAddsAndPersists() {
     TransactionStore storage = new MemoryStorage();
     Transaction lineItem =
